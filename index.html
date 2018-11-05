@@ -12,11 +12,14 @@
 	AFRAME.registerComponent('registerevents', {
 		init: function () {
 			var marker = this.el;
-			marker.addEventListener('markerFound', function () {
+				marker.addEventListener('markerFound', function () {
 				var markerId = marker.id;
 				console.log('markerFound', markerId);
 				//document.getElementById('title').innerText = markerId + 'found';
 				//document.getElementById(markerId + '-t').classList.add('active');
+				if (markerId == 'marker-barcode-3'){
+					document.getElementById('new_info').classList.add('active');
+				}
 				if (markerId == 'marker-barcode-2'){
 					document.getElementById('video_info').classList.add('active');
 				}
@@ -28,6 +31,9 @@
 				var markerId = marker.id;
 				//document.getElementById('title').innerText = markerId + 'lost';
 				//document.getElementById(markerId + '-t').classList.remove('active');
+				if (markerId == 'marker-barcode-3'){
+					document.getElementById('new_info').classList.remove('active');
+				}
 				if (markerId == 'marker-barcode-2'){
 					document.getElementById('video_info').classList.remove('active');
 				}
@@ -37,7 +43,9 @@
 			});
 		}
 	});
+
 	AFRAME.registerComponent('markerhandler', {
+
 		init: function () {
 			var el = this.el,
 				name = el.attributes.name.nodeValue,
@@ -46,26 +54,50 @@
 				if (el.object3D.visible == true && ev.detail.cursorEl) {
 					if (!frame.hasClass('opened')){
 						frame.addClass('opened');
+						if (name == 'you-2'){
+							$("#video").attr('src', $("#video").attr('src') + '&autoplay=1');
+						}
 					}
+
 				}
 			})
 		}
 	});
+
 	$(document).on('click', '.frame .close', function(){
 		var frame = $(this).parents('.frame');
 		if (frame.hasClass('opened')){
 			frame.removeClass('opened');
+			var videoURL = $('#video').prop('src');
+			videoURL = videoURL.replace("&autoplay=1", "");
+			$('#video').prop('src','');
+			$('#video').prop('src',videoURL);
 		}
+	});
+	$(document).on('click', '#new_info', function(){
+		var frame = $(this).parents('.frame');
+		$('.frame-you-1').addClass('opened');
+	});
+	$(document).on('click', '#video_info', function(){
+		var frame = $(this).parents('.frame');
+		$('.frame-you-2').addClass('opened');
+		$("#video").attr('src', $("#video").attr('src') + '&autoplay=1');
+	});
+
+	$(document).on('click', '#text_info', function(){
+		var frame = $(this).parents('.frame');
+		$('.frame-you-1').addClass('opened');
 	});
 </script>
 <style>
 	#panel p.active {
 		color: red;
 	}
+
 	.frame {
 		display: none;
 		position: fixed;
-		z-index: 10000;
+		z-index: 10001;
 		left: 0;
 		top: 0;
 		bottom: 0;
@@ -82,13 +114,13 @@
 		background: #000;
 		color: #fff;
 		font-size: 24px;
-		z-index: 10;
 		display: flex;
 		align-items: center;
-		width: 30px;
-		height: 30px;
+		width: 40px;
+		height: 40px;
 		justify-content: center;
 		text-align: center;
+		z-index: 10002;
 	}
 	.frame.opened {
 		display: block;
@@ -108,6 +140,7 @@
 		align-items: center;
 		justify-content: center;
 		margin: auto;
+		z-index: 10000;
 	}
 	.info.active {
 		bottom: 10px;
@@ -121,6 +154,11 @@
 		right: 10px;
 		left: auto;
 	}
+	.info_new {
+		right: 0;
+		left: 0;
+		margin: auto;
+	}
 </style>
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
 <div style='position: fixed; top: 10px; width:100%; text-align: center; z-index: 1;'>
@@ -131,27 +169,38 @@
 	<!--<div id="panel"
 		 style="position: fixed; display: flex; justify-content: space-around; top: 50px; left: 0; right: 0;text-align: center; z-index: 1000; background: #fff;">
 		<p id="marker-barcode-1-t">Showing id 1</p>
+
 		<p id="marker-barcode-2-t">Showing id 2</p>
+
 		<p id="marker-barcode-4-t">Showing id 4</p>
 	</div>-->
 	<div id="video_info" class="info info_video">
-		<p>Кликните на иконку видео, для открытия окна с видио</p>
+		<p>Кликните на этот текст, для открытия окна с видио</p>
 	</div>
 	<div id="text_info" class="info info_text">
-		<p>Кликните на иконку додекаэдра, для открытия окна с текстом</p>
+		<p>Кликните на этот текст, для открытия окна с текстом</p>
+	</div>
+	<div id="new_info" class="info info_new">
+		<p>Кликните на этот текст, для открытия окна с информцией</p>
 	</div>
 	<div class="frame frame-you-1">
 		<div class="close">X</div>
 		<h2>Заголовок блока</h2>
-		<p>Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам</p>
+		<p>Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам</p>
 		<p>Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам</p>
 		<p>Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам</p>
 	</div>
 	<div class="frame frame-you-2">
 		<div class="close">X</div>
-		<iframe width="100%" height="100%" src="https://www.youtube.com/embed/rBOhyUXInKo" frameborder="0"
-				allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-				allowfullscreen></iframe>
+		<iframe id="video" width="100%" height="100%" src="//www.youtube.com/embed/9B7te184ZpQ?rel=0" frameborder="0" allowfullscreen></iframe>
+	</div>
+	<div class="frame frame-you-3">
+		<div class="close">X</div>
+		<h2>Зайди на sb.by/vr</h2>
+		<p>Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам</p>
+		<p>Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам</p>
+		<p>Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам</p>
+		<p>Зайди на sb.by/vr со своего телефона, и получи доступ к доп. материалам</p>
 	</div>
 	<a-scene embedded
 			 arjs='debugUIEnabled: false; sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 4x4;'
@@ -161,10 +210,14 @@
 				  registerevents markerhandler emitevents="true" cursor="rayOrigin: mouse">
 			<a-dodecahedron look-at="[camera]" color="#FF926B" radius="0.8"></a-dodecahedron>
 		</a-marker>
+		<a-marker type='barcode' value='3' id='marker-barcode-3'  name="you-3"
+				  registerevents markerhandler emitevents="true" cursor="rayOrigin: mouse">
+			<a-dodecahedron look-at="[camera]" color="red" radius="0.8"></a-dodecahedron>
+		</a-marker>
 
 		<a-assets>
 			<a-asset-item id="animated-asset"
-						  src="https://raw.githubusercontent.com/WhiteSama/AR/master/yt.gltf"></a-asset-item>
+						  src="https://raw.githubusercontent.com/WhiteSama/AR/master/te.gltf"></a-asset-item>
 		</a-assets>
 		<a-marker registerevents markerhandler emitevents="true" cursor="rayOrigin: mouse" id='marker-barcode-2'
 				  name="you-2" type='barcode' value='2'>
