@@ -17,7 +17,7 @@
 				console.log('markerFound', markerId);
 				//document.getElementById('title').innerText = markerId + 'found';
 				//document.getElementById(markerId + '-t').classList.add('active');
-				if (markerId == 'marker-barcode-4'){
+				if (markerId == 'marker-barcode-2'){
 					document.getElementById('video_info').classList.add('active');
 				}
 				if (markerId == 'marker-barcode-1'){
@@ -28,8 +28,12 @@
 				var markerId = marker.id;
 				//document.getElementById('title').innerText = markerId + 'lost';
 				//document.getElementById(markerId + '-t').classList.remove('active');
-				document.getElementById('video_info').classList.remove('active');
-				document.getElementById('text_info').classList.remove('active');
+				if (markerId == 'marker-barcode-2'){
+					document.getElementById('video_info').classList.remove('active');
+				}
+				if (markerId == 'marker-barcode-1'){
+					document.getElementById('text_info').classList.remove('active');
+				}
 			});
 		}
 	});
@@ -162,8 +166,8 @@
 			<a-asset-item id="animated-asset"
 						  src="https://raw.githubusercontent.com/WhiteSama/AR/master/yt.gltf"></a-asset-item>
 		</a-assets>
-		<a-marker registerevents markerhandler emitevents="true" cursor="rayOrigin: mouse" id='marker-barcode-4'
-				  name="you-2" type='barcode' value='4'>
+		<a-marker registerevents markerhandler emitevents="true" cursor="rayOrigin: mouse" id='marker-barcode-2'
+				  name="you-2" type='barcode' value='2'>
 			<a-entity look-at="[camera]"
 				id="animated-model"
 				gltf-model="#animated-asset">
